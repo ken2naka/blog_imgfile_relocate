@@ -1,44 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-
-作成：2018-12-18
-
-目的：
-・ブログ記事中にリンクされている画像ファイルは img ディレクトリに格納されている。
-・なお、画像は多数あり、全体では xx MB 以上にもなっている。それゆえ、img ディレクトリ
-　　の直下にばらまくのではなく、サブディレクトリごとに小分けしている。
-
-・その小分けの方法は、従来は blog記事の作成年月で決め打ちしていた（例："2018-12"）。
-・だが、blog 記事の作成年月で格納ディレクトリを決めより、url-no で決めたほうが
-　　わかりやすく、ロジックも明確になることに気づいた。
-
-・なぜなら…
- 　　・url-no は一義的だが、記事の作成年月の解釈は一義的ではない。
- 　　・記事の作成年月は FC2 blog のシステム依存な面がある。
- 　　・記事の末尾に記載している日付は大概、実際の日付とは一致しない。
-
-・そこで img ディレクトリに格納済みの大量の画像ファイルを配置し直すことに決めた。
-・つまり、従来は
-　　img/2018-12/a.jpg
-　というように小分けしていたが、
-　　img/00128/a.jpg
-　に移動させる。なお、00128 は a.jpg を参照している blog 記事の url_no / 100 に相当。
-
-処理の概要：
-1. fc2.db（データベースファイル）を開き、記事を url_no でソートして順に読み出す。
-2. 記事の本文 body_untaged ? を beautifulSoup で解析し、href... <img ...> タグに含まれる
-　　画像ファイルを list にリストアップ。
-3. 同時に、記事の作成日時 date_create ? から従来の格納先ディレクトリ(old_img_dir)を得る。
-4. url_no から新しい格納先ディレクトリ（new_img_dir）を求める。
-5. リストアップした画像ファイルを old_img_dir から new_img_dir に移動させる。
-
-入力ファイル：なし
-引数：なし
-対象：python3
-実行方法：python img_relocate.py
-"""
-
-# ------------------
 import os
 # import pathlib
 # import codecs
@@ -68,7 +28,7 @@ from typing import Any, cast, Pattern, Union, Match, Optional, Iterator
 # 以下の行が無いと git bash で実行した時、unicodeEncodeError となる。それを防止する。
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-G_VER_STR = '0.56'  # version number of this program
+G_VER_STR = '0.57'  # version number of this program
 
 # このスクリプト本体のロガーを取得してログレベルを設定する
 logger = logging.getLogger(__name__)
