@@ -18,6 +18,7 @@ import io
 from tqdm import tqdm
 import inspect
 import shutil
+import copy  # for copy.deep.copy()
 
 # type annotation
 # from typing import Callable, Iterable, Union, Optional
@@ -28,7 +29,7 @@ from typing import Any, cast, Pattern, Union, Match, Optional, Iterator
 # 以下の行が無いと git bash で実行した時、unicodeEncodeError となる。それを防止する。
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
-G_VER_STR = '0.57'  # version number of this program
+G_VER_STR = '0.58'  # version number of this program
 
 # このスクリプト本体のロガーを取得してログレベルを設定する
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ class Gd:
 
     fo: Optional[IO[str]] = None
     out_file: str = "report_img_relocate.text"
-    RE_SCRAPE_URL: List[str] = [] # ["http://xxx.blog.fc2.com", "https://xxx.blog.fc2.com"]
+    RE_SCRAPE_URL: List[str] = []   # ["http://xxx.blog.fc2.com", "https://xxx.blog.fc2.com"]
     RE_SCRAPE_FILE: str = 'must_recrape.text'
 
     err_count: int = 0
@@ -484,7 +485,10 @@ def read_file_blog_url2() ->None:
         print(msg, file=sys.stderr)
         sys.exit()
 
-    Gd.RE_SCRAPE_URL = map(lambda x: x.rstrip(), lines)
+    Lines = map(lambda x: x.rstip(), lines)
+
+    # lines は map object なので、一旦 list 型にしてから deep copy
+    Gd.RE_SCRAPE_URL = copy.deepcopy(list(lines))
 
     for i, item in enumerate(Gd.RE_SCRAPE_URL):
         print("post {}: <{}>".format(i, item))
