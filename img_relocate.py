@@ -501,7 +501,7 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     # 必須パラメータ
-    parser.add_argument("mode", choices=['check', 'copy'], help="select FILE COPY or CHECK ONLY(not copy)")
+    parser.add_argument("mode", choices=['check', 'copy', 'none'], help="select FILE COPY or CHECK ONLY(not copy) or nothing to do.")
 
     # オプション・パラメータ
     parser.add_argument("-n", "--nlist", type=int, metavar="<url-num>",
@@ -551,6 +551,9 @@ if __name__ == "__main__":
 
     args = get_args()
 
+    # blog の url を記載したファイルを読み込む。
+    read_file_blog_url2()
+
     if 1:
         logger.debug("args.cmode={}".format(args.mode))
         logger.debug("args.nlist={}".format(args.nlist))
@@ -580,6 +583,8 @@ if __name__ == "__main__":
     elif args.mode == 'copy':
         Gd.copy = True
         relocate_local_imagefiles()
+    elif args.mode == 'none':
+        pass
     else:
         print("### Error! Illagel mode argument:{}".format(args.mode))
         sys.exit()
